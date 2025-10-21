@@ -14,8 +14,8 @@ formE1.addEventListener('submit', (event) => {
 	/*---
         Realiza validaciones en los datos del formulario antes de procesar
         */
-
-	if (data.username == '' || data.password == '') {
+			/*Se cambio a contacto para que pueda verificar por email*/
+	if (data.contacto == '' || data.password == '') {
 		console.log('debe indicar usuario');
 		document.getElementById('resultado1').style.color = 'RED';
 		document.getElementById('resultado1').style.textAlign = 'center';
@@ -24,7 +24,7 @@ formE1.addEventListener('submit', (event) => {
 		return;
 	}
 
-	if (data.username == 'pec') {
+	if (data.contacto == 'pec') {   /*--Fix hecho por  Germán Lombardi IS1-2025 */
 		console.log('pec no es bienvenido en éste sistema');
 		const m = '<li>El usuario <pec> no es bienvenido en éste sistema</li>';
 		document.getElementById('resultado2').style.color = 'RED';
@@ -54,24 +54,26 @@ formE1.addEventListener('submit', (event) => {
 	const systemURL = {
 		listarTicket: 'http://127.0.0.1:5500/HTML/listarTicket.html',
 		loginCliente: 'http://127.0.0.1:5500/HTML/loginClient.html',
+		registryCliente: 'http://127.0.0.1:5500/HTML/registryClient.html',
 	};
 
 	const RESTAPI = {
 		loginCliente: 'http://localhost:8080/api/loginCliente',
 		listarTicket: 'http://localhost:8080/api/listarTicket',
+		addCliente: 'http://localhost:8080/api/addClient',
 	};
 
 /*-----
     Define el URI para realizar el acceso en base al acceso a un servidor local
 */
-    const MODE='AWS'; /*-- Instrucción a cambiar opciones LOCAL, TYPICODE o AWS --*/
+    const MODE='LOCAL'; /*-- Instrucción a cambiar opciones LOCAL, TYPICODE o AWS --*/
 
 	if (MODE == 'LOCAL') {
 	/*-----
         Crea estructuras para acceder a data del cliente
         */
 	    const login = {
-	        id: data.id,
+			contacto: data.contacto, /* Se cambio por contacto */ 
 		    password: data.password
 		}	
 
@@ -138,7 +140,7 @@ formE1.addEventListener('submit', (event) => {
 			console.log(
 				'Datos en respuesta del application server=' + JSON.stringify(users)
 			);
-			console.log('users.response=' + users.password);
+			console.log('users.response=' + users.response);
 			if (users.response == 'OK') {
 				//<==Habilitar esto para dejar que el API REST verifique sin exponer la password
 				console.log('La password es correcta');
@@ -184,9 +186,9 @@ formE1.addEventListener('submit', (event) => {
 					'&mode=' + MODE;
 			} else {
 				console.log('La password no es correcta');
-				document.getElementById('resultado').style.color = 'RED';
-				document.getElementById('resultado').textContent =
-					'Error de login, intente nuevamente';
+				document.getElementById('resultado1').style.color = 'RED'; /*--Fix hecho por  Germán Lombardi IS1-2025 */
+				document.getElementById('resultado1').textContent =
+					'Error de login, intente nuevamente';                  /*--Fix hecho por  Germán Lombardi IS1-2025 */
 			}
 		});
 });

@@ -11,7 +11,7 @@
 //AWS_SDK_JS_SUPPRESS_MAINTENANCE_MODE_MESSAGE=1
 
 import express from 'express';
-import crypto from 'crypto';
+import crypto, { randomUUID } from 'crypto';
 console.log("Comenzando servidor");
 
 // const crypto = require('crypto');
@@ -101,28 +101,30 @@ app.get('/api/cliente', (req,res) => {
 */  
 app.post('/api/loginCliente', (req,res) => {
 
-    const { id } = req.body;
+    const { contacto } = req.body; /* Se cambio por contacto */
     const {password} = req.body;
 
-    console.log("loginCliente: id("+id+") password ("+password+")");
+    console.log("loginCliente: id("+contacto+") password ("+password+")");
 
     if (!password) {
         res.status(400).send({response : "ERROR" , message : "Password no informada"});
         return;
     }    
-    if (!id) {
+    if (!contacto) {
         res.status(400).send({response : "ERROR" , message : "id no informado"});
         return;
     }    
 
-    let getClienteByKey = function () {
-        var params = {
+
+    /* Se crea un parametro constante */
+    const paramsScan = {
             TableName: "cliente",
-            Key: {
-                "id" : id
-            }
-        };
-        docClient.get(params, function (err, data) {
+            FilterExpression: 'contacto = :contacto',
+            ExpressionAttributeValues: {':contacto': contacto}
+    };
+
+    /*Se cambia a un scan completo de los datos */
+    docClient.scan(paramsScan, function (err, data) {
             if (err) {
                 res.status(400).send(JSON.stringify({response : "ERROR", message : "DB access error "+err}));
             }
@@ -130,14 +132,15 @@ app.post('/api/loginCliente', (req,res) => {
                 if (Object.keys(data).length == 0) {
                     res.status(400).send({response : "ERROR" , message : "Cliente invalido"});
                 } else {
-                    const paswd=jsonParser('password',data.Item);
-                    const activo=jsonParser('activo',data.Item);
-                    const id=jsonParser('id',data.Item);
-                    const contacto=jsonParser('contacto',data.Item);
+                    const Data1 = data.Items[0];
+                    const paswd=jsonParser('password',Data1);
+                    const activo=jsonParser('activo',Data1);
+                    const id=jsonParser('id',Data1);
+                    const contacto=jsonParser('contacto',Data1);
                     if (password == paswd) {
                         if (activo == true) {
-                            const nombre=jsonParser('nombre',data.Item);
-                            const fecha_ultimo_ingreso=jsonParser('fecha_ultimo_ingreso',data.Item);
+                            const nombre=jsonParser('nombre',Data1);
+                            const fecha_ultimo_ingreso=jsonParser('fecha_ultimo_ingreso',Data1);
                             res.status(200).send(JSON.stringify({response : "OK", "id" : id, "nombre" : nombre, "contacto" : contacto, "fecha_ultimo_ingreso": fecha_ultimo_ingreso}));    
                         } else {
                             res.status(400).send(JSON.stringify({response : "ERROR", message : "Cliente no activo"}));    
@@ -145,12 +148,9 @@ app.post('/api/loginCliente', (req,res) => {
                     } else {
                        res.status(400).send(JSON.stringify({response : "ERROR" , message : "usuario incorrecto"}));
                     }    
-            }    
+            }   
             }
-        })
-    }
-    getClienteByKey();
-
+    })
 });
 
 
@@ -241,7 +241,8 @@ app.post('/api/addCliente', (req,res) => {
         hoy = dd + '/' + mm + '/' + yyyy;
     
         const newCliente = {
-         id                    : contacto,
+         id                    : crypto.randomUUID(),
+         contacto              : contacto,
          nombre                : nombre,
          password              : password,
          activo                : true,

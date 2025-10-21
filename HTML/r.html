@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cambiar Contraseña</title>
+    <style>
+        /* [ ... ESTILOS CSS ANTERIORES ... ] */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #ffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .container {
+            background-color: #75daff;
+            padding: 30px;
+            border-radius: 10px;
+            width: 350px;
+        }
+        h2 {
+            text-align: center;
+            color: #0056b3;
+            margin-bottom: 25px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: #333;
+            font-weight: bold;
+        }
+        input[type="email"],
+        .password-container input[type="password"],
+        .password-container input[type="text"] {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #b3d9ff;
+            border-radius: 6px;
+            box-sizing: border-box;
+            padding-right: 70px; /* Se ajusta el padding derecho para el texto [ocultar]/[ver] */
+        }
+        .password-container {
+            position: relative;
+            margin-bottom: 20px;
+        }
+        /* Estilo para el botón de texto [ver]/[ocultar] */
+        .toggle-password {
+            position: absolute;
+            top: 50%;
+            right: 5px;
+            transform: translateY(-50%);
+            cursor: pointer;
+            color: #007bff;
+            user-select: none;
+            font-size: 0.9em;
+            font-weight: bold;
+            padding: 2px 5px; /* Pequeño padding para hacerlo más clicable */
+            border-radius: 3px;
+            background-color: rgba(255, 255, 255, 0.5); /* Fondo ligero */
+        }
+        input[type="submit"] {
+            width: 100%;
+            background-color: #007bff;
+            color: white;
+            padding: 12px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s ease;
+            margin-top: 5px;
+        }
+        input[type="submit"]:hover {
+            background-color: #0056b3;
+        }
+        .error-message {
+            color: #ff3333;
+            margin-bottom: 15px;
+            text-align: center;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h2>🔒 Cambiar Contraseña</h2>
+        <form class="form" action="/api/reset-password" method="post" onsubmit="return validarContrasena()">
+
+            <label for="correo">Correo Electrónico:</label>
+            <input type="email" id="correo" name="correo" required placeholder="tu.correo@ejemplo.com" style="margin-bottom: 20px;">
+            
+            <label for="nueva_contrasena">Nueva Contraseña:</label>
+            <div class="password-container">
+                <input type="password" id="nueva_contrasena" name="nueva_contrasena" required minlength="6" placeholder="Mínimo 6 caracteres">
+                <span class="toggle-password" onclick="togglePassword('nueva_contrasena', this)">ver</span>
+            </div>
+
+            <label for="confirmar_contrasena">Confirmar Nueva Contraseña:</label>
+            <div class="password-container">
+                <input type="password" id="confirmar_contrasena" name="confirmar_contrasena" required placeholder="Repite la contraseña">
+                <span class="toggle-password" onclick="togglePassword('confirmar_contrasena', this)">ver</span>
+            </div>
+            
+            <div id="error-match" class="error-message" style="display: none;">
+                Las contraseñas no coinciden. Por favor, verifica.
+            </div>
+
+            <input type="submit" value="Restablecer Contraseña">
+        </form>
+    </div>
+
+    <script>
+        /**
+         * Función para alternar la visibilidad de un campo de contraseña.
+         */
+        function togglePassword(id, button) {
+            const input = document.getElementById(id);
+            if (input.type === 'password') {
+                input.type = 'text'; // Mostrar la contraseña
+                button.textContent = 'ocultar'; // Cambiar texto a ocultar
+            } else {
+                input.type = 'password'; // Ocultar la contraseña
+                button.textContent = 'ver'; // Cambiar texto a ver
+            }
+        }
+
+        /**
+         * Función para validar que los campos de nueva contraseña y confirmación coincidan.
+         */
+        function validarContrasena() {
+            const nueva = document.getElementById('nueva_contrasena').value;
+            const confirmar = document.getElementById('confirmar_contrasena').value;
+            const errorDiv = document.getElementById('error-match');
+
+            if (nueva !== confirmar) {
+                errorDiv.style.display = 'block'; 
+                return false; 
+            } else {
+                errorDiv.style.display = 'none'; 
+                alert('¡Contraseñas coinciden! El servidor procesaría la solicitud de cambio ahora.');
+                return false;
+            }
+        }
+    </script>
+
+</body>
+</html>
