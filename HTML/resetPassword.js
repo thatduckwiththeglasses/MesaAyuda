@@ -122,6 +122,8 @@ form.addEventListener('submit', (event) => {
 		            elementoResultado.textContent = mensaje;
 	            }
 				// Redirigir después de éxito
+				window.location.href =
+					systemURL.loginCliente;
 			} else {
 				mostrarError(datos.message);
                 function mostrarError(mensaje) {
