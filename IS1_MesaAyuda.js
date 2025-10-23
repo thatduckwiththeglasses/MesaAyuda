@@ -374,16 +374,15 @@ app.post('/api/resetCliente', (req,res) => {
         return;
     }
 
-    // --- PASO 1: Corregir el SCAN ---
     // Usamos FilterExpression para BUSCAR por 'contacto'
     var paramsScan = {
         TableName: "cliente",
-        FilterExpression: "#c = :c", // Filtra donde el campo 'contacto' sea igual al valor
+        FilterExpression: "#contacto = :contacto", // Filtra donde el campo 'contacto' sea igual al valor
         ExpressionAttributeNames: {
-            "#c": "contacto"
+            "#contacto": "contacto"
         },
         ExpressionAttributeValues: {
-            ":c": contacto
+            ":contacto": contacto
         }
     };
         
@@ -392,22 +391,12 @@ app.post('/api/resetCliente', (req,res) => {
             res.status(400).send(JSON.stringify({response : "ERROR", message : "DB access error (scan): "+ err}));
             return;
         } else {
-
-            // --- PASO 2: Verificar si el SCAN encontró al cliente ---
             // data.Count es la forma correcta de ver los resultados de un scan
             if (data.Count == 0) {
                 res.status(400).send(JSON.stringify({"response":"ERROR", message : "Cliente no existe"}), null, 2);
                 return;
             } else {
-                
-                // --- PASO 3: Obtener la LLAVE PRIMARIA REAL del cliente encontrado ---
                 const clienteEncontrado = data.Items[0];
-                
-                // !!! IMPORTANTE !!!
-                // Estoy asumiendo que tu Llave Primaria (Partition Key) es 'id'
-                // basado en tu propio comentario: //test use "id": "..."
-                // Si tu llave se llama diferente (ej: 'clienteId'), cambia 'clienteEncontrado.id'
-                // y también cambia la 'Key' en paramsUpdate.
                 
                 const idCliente = clienteEncontrado.id;
 
@@ -416,28 +405,23 @@ app.post('/api/resetCliente', (req,res) => {
                     res.status(500).send(JSON.stringify({ response: "ERROR", message: "El item encontrado en la DB no tiene un 'id'" }));
                     return;
                 }
-
-                // --- PASO 4: Corregir el UPDATE para usar la 'id' ---
                 const paramsUpdate = { 
                     TableName: "cliente", 
                     Key: { 
-                       "id": idCliente  // <-- ESTA ES LA CORRECCIÓN CRÍTICA
-                       // Si tuvieras una llave compuesta (Partition + Sort Key),
-                       // necesitarías ambas aquí. Ej: { "id": idCliente, "email": clienteEncontrado.email }
+                       "id": idCliente
                     },
-                    UpdateExpression: "SET #p = :p", // Actualiza el campo 'password'
+                    UpdateExpression: "SET #password = :password", // Actualiza el campo 'password'
                     ExpressionAttributeNames: { 
-                         "#p": "password" 
+                         "#password": "password" 
                     }, 
                     ExpressionAttributeValues: { 
-                        ":p": password 
+                        ":password": password 
                     },
                     ReturnValues: "ALL_NEW"
                 };
 
                 docClient.update(paramsUpdate, function (err, data) {
                     if (err)  {
-                        // Aquí es donde estabas recibiendo el error ValidationException
                         res.status(400).send(JSON.stringify({response : "ERROR", message : "DB access error (update): "+err}));
                         return;
                     } else {
