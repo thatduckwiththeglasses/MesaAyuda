@@ -9,7 +9,7 @@ formE1.addEventListener('submit', (event) => {
 	const formData = new FormData(formE1);
 	const data = Object.fromEntries(formData);
 	console.log('Application Server: Revisa el valor del form:');
-	console.log(data);
+	console.log(data.contacto);
 
 	/*---
         Realiza validaciones en los datos del formulario antes de procesar
@@ -55,6 +55,7 @@ formE1.addEventListener('submit', (event) => {
 		listarTicket: 'http://127.0.0.1:5500/HTML/listarTicket.html',
 		loginCliente: 'http://127.0.0.1:5500/HTML/loginClient.html',
 		registryCliente: 'http://127.0.0.1:5500/HTML/registryClient.html',
+		resetPassword: 'http://127.0.0.1:5500/HTML/resetPassword.html',
 	};
 
 	const RESTAPI = {
@@ -73,7 +74,7 @@ formE1.addEventListener('submit', (event) => {
         Crea estructuras para acceder a data del cliente
         */
 	    const login = {
-			contacto: data.contacto, /* Se cambio por contacto */ 
+			contacto: data.contacto, /* Se cambio por contacto, SOLO MOSTRAR CONTACTO */ 
 		    password: data.password
 		}	
 
@@ -88,9 +89,9 @@ formE1.addEventListener('submit', (event) => {
 
 
 	 	console.log('API REST:' + RESTAPI.loginCliente);
-	    console.log(login);
-	    console.log('login(' + JSON.stringify(login) + ')');
-	    console.log('options ' + JSON.stringify(options));
+	    console.log(login.contacto);
+	    console.log('login(' + JSON.stringify(login.contacto) + ')');
+	    console.log('options ' +' { '+ JSON.stringify(options.method) +' , ' + JSON.stringify(options.headers) + ' } ');
     	var API = RESTAPI.loginCliente;
 	    var APIoptions = options;
 

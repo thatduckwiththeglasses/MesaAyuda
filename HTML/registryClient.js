@@ -63,9 +63,8 @@ form.addEventListener('submit', (event) => {
 
 
 	 	console.log('API REST:' + RESTAPI.registryCliente);
-	    console.log(regist);
-	    console.log('regist(' + JSON.stringify(regist) + ')');
-	    console.log('options ' + JSON.stringify(options));
+	    console.log('regist(' + JSON.stringify(regist.contacto) + ' , '+JSON.stringify(regist.nombre)+')');
+	    console.log('options: ' + JSON.stringify(options.method) + ' , '+JSON.stringify(options.headers) );
     	var API = RESTAPI.addCliente;
 	    var APIoptions = options;
 
@@ -99,7 +98,7 @@ form.addEventListener('submit', (event) => {
 	/*----------------------------------------------------------------------*/
 	if (MODE == 'AWS') {
 		console.log('Acceso usando AWS lambda como application server');
-		API='https://fmtj0jrpp9.execute-api.us-east-1.amazonaws.com/default/loginUserGET?ID=' + data.id + '&PASSWORD=' + data.password;
+		API='https://fmtj0jrpp9.execute-api.us-east-1.amazonaws.com/default/addUserGET?ID=' + data.id + '&PASSWORD=' + data.password;
     	APIoptions = { method: 'POST' };
 	}
 	/*-----

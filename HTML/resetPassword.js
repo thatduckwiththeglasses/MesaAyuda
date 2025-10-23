@@ -11,6 +11,11 @@ form.addEventListener('submit', (event) => {
 	const formData = new FormData(form);
 	const data = Object.fromEntries(formData);
 
+	if (data.contacto === '' || data.password === '') {
+		mostrarError('Debe completar todos los campos');
+		return;
+	}
+
 	if (data.password == ' ') {
 		mostrarError('Las contraseñas no pueden estar vacias');
 		return;
@@ -35,7 +40,7 @@ form.addEventListener('submit', (event) => {
     /* se guardan las llamadas a las funciones en mesaayuda.js */
 	const RESTAPI = {
 		loginCliente: 'http://localhost:8080/api/loginCliente',
-        resetPassword: 'http://localhost:8080/api/updateCliente',
+        resetPassword: 'http://localhost:8080/api/resetCliente',
 	};
 
 /*-----
@@ -48,6 +53,7 @@ form.addEventListener('submit', (event) => {
         Crea estructuras para acceder a data del cliente
         */
 	    const updatePass = {
+            contacto: data.contacto,
 		    password: data.password,
 		}	
 
@@ -62,9 +68,8 @@ form.addEventListener('submit', (event) => {
 
 
 	 	console.log('API REST:' + RESTAPI.resetPassword);
-	    console.log(updatePass);
-	    console.log('regist(' + JSON.stringify(updatePass) + ')');
-	    console.log('options ' + JSON.stringify(options));
+		console.log('reseteando: '+ JSON.stringify(updatePass.contacto));
+	    console.log('options ' + JSON.stringify(options.method) + ' , ' + JSON.stringify(options.headers)+ 'se enviando las constraseñas ');
     	var API = RESTAPI.resetPassword;
 	    var APIoptions = options;
 
