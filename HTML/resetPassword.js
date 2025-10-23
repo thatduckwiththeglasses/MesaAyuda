@@ -117,7 +117,7 @@ form.addEventListener('submit', (event) => {
 			if (datos.response === 'OK') {
 				mostrarExito('Cambio exitoso');
                 function mostrarExito(mensaje) {
-		            const elementoResultado = document.getElementById('resultado2');
+		            const elementoResultado = document.getElementById('resultado1');
 		            elementoResultado.style.color = 'green';
 		            elementoResultado.textContent = mensaje;
 	            }
@@ -130,16 +130,7 @@ form.addEventListener('submit', (event) => {
 		            elementoResultado.textContent = mensaje;
                 }
 			}
-		})
-
-	.catch(error => {
-		mostrarError('Error de conexión');
-        function mostrarError(mensaje) {
-		    const elementoResultado = document.getElementById('resultado1');
-		    elementoResultado.style.color = 'red';
-		    elementoResultado.textContent = mensaje;
-        }
-	});
+		});
 
 
 	// Lógica del formulario aquí
