@@ -194,7 +194,7 @@ async function scanDb(contacto) {
     const paramsScan = { // ScanInput
       TableName: "cliente", // required
       Select: "ALL_ATTRIBUTES" || "ALL_PROJECTED_ATTRIBUTES" || "SPECIFIC_ATTRIBUTES" || "COUNT",
-      FilterExpression : 'id = :contacto',
+      FilterExpression : 'contacto = :contacto',
       ExpressionAttributeValues : {':contacto' : scanKey}
     };      
     var objectPromise = await docClient.scan(paramsScan).promise().then((data) => {
@@ -227,10 +227,10 @@ app.post('/api/addCliente', (req,res) => {
         res.status(400).send({response : "ERROR" , message : "Contacto no informado"});
         return;
     } 
-
+    
     scanDb(contacto)
     .then(resultDb => {
-      if (Object.keys(resultDb).length != 0) {
+      if (resultDb && resultDb.length > 0) {
         res.status(400).send({response : "ERROR" , message : "Cliente ya existe"});
         return;
       } else {

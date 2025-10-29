@@ -1,6 +1,10 @@
 const form = document.querySelector('.form');
 
-
+function mostrarError(mensaje) {
+		            const elementoResultado = document.getElementById('resultado1');
+		            elementoResultado.style.color = 'red';
+		            elementoResultado.textContent = mensaje;
+                }
 
 /*---
     Intercepta el submit del formulario
@@ -126,11 +130,6 @@ form.addEventListener('submit', (event) => {
 					systemURL.loginCliente;
 			} else {
 				mostrarError(datos.message);
-                function mostrarError(mensaje) {
-		            const elementoResultado = document.getElementById('resultado1');
-		            elementoResultado.style.color = 'red';
-		            elementoResultado.textContent = mensaje;
-                }
 			}
 		});
 

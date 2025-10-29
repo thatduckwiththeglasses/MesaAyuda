@@ -1,7 +1,11 @@
 const form = document.querySelector('.form');
 
 
-
+function mostrarError(mensaje) {
+		const elementoResultado = document.getElementById('resultado1');
+		elementoResultado.style.color = 'red';
+		elementoResultado.textContent = mensaje;
+	}
 /*---
     Intercepta el submit del formulario
     */
@@ -122,12 +126,6 @@ form.addEventListener('submit', (event) => {
 	.catch(error => {
 		mostrarError('Error de conexión');
 	});
-
-	function mostrarError(mensaje) {
-		const elementoResultado = document.getElementById('resultado1');
-		elementoResultado.style.color = 'red';
-		elementoResultado.textContent = mensaje;
-	}
 	function mostrarExito(mensaje) {
 		const elementoResultado = document.getElementById('resultado2');
 		elementoResultado.style.color = 'green';
