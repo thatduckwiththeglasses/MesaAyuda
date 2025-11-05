@@ -1,4 +1,11 @@
 
+function mostrarError(mensaje) {
+        document.getElementById('mensajes').style.textAlign = "center";
+        document.getElementById('mensajes').style.color = "RED";
+        document.getElementById("mensajes").textContent = mensaje;
+                }
+
+
 /*---
 Función para procesar los parámetros recibidos en el URL
 */
@@ -150,4 +157,8 @@ fetch(`${APIREST_URL}`,options)
         document.getElementById('mensajes').style.color="RED";
         document.getElementById("mensajes").innerHTML = "No hay tickets pendientes";
     }
-});
+}).catch(error => {
+    
+        console.error('Error al cargar tickets:', error);
+        mostrarError("No hay tickets");
+    });;
