@@ -161,4 +161,4 @@ fetch(`${APIREST_URL}`,options)
     
         console.error('Error al cargar tickets:', error);
         mostrarError("No hay tickets");
-    });;
+    });

@@ -23,6 +23,14 @@ form.addEventListener('submit', (event) => {
 		mostrarError('Las contraseñas no coinciden');
 		return;
 	}
+	if (data.termscondition != 'on') {
+		console.log('no aceptó los T&C no se puede registrar');
+		document.getElementById('resultado2').style.textAlign = 'center';
+		document.getElementById('resultado2').style.color = 'RED';
+		document.getElementById('resultado2').textContent =
+			'Debe aceptar los T&C para poder usar el sistema';
+		return;
+	}
 
 	const HTMLResponse = document.querySelector('#app');
 	const ul = document.createElement('ul');
